@@ -20,9 +20,9 @@ enum attackStrategy {
 }
 
 class Strategy {
-  late startStrategy start;
-  late patrolStrategy patrol;
-  late attackStrategy attack;
+  final startStrategy start;
+  final patrolStrategy patrol;
+  final attackStrategy attack;
 
-  Strategy(this.start, this.patrol, this.attack);
+  const Strategy(this.start, this.patrol, this.attack);
 }

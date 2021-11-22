@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sumo_connect/strategies.dart';
 import 'package:sumo_connect/sync.dart';
 
+import 'battle.dart';
 import 'bluetooth.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       "Batalha": {
         "description": "Reconhecimento da arena e inicialização da batalha",
-        "function": () {},
+        "function": () {openPage(const BattlePage());},
         "active": () => (bleHandler.connectedTo != null && bleHandler.connectedTo!.strategy != null)
       }
     };

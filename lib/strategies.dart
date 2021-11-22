@@ -26,7 +26,7 @@ class _StrategiesPageState extends State<StrategiesPage> {
         if (bleHandler.connectedTo!.strategy == null) {
           button = ElevatedButton(
               onPressed: () {
-                bleHandler.connectedTo!.strategy = strategy;
+                bleHandler.setStrategy(strategy);
                 setState(() {});
               },
               child: const Text("Ativar")
@@ -35,7 +35,7 @@ class _StrategiesPageState extends State<StrategiesPage> {
           if (bleHandler.connectedTo!.strategy == strategy) {
             button = ElevatedButton(
                 onPressed: () {
-                  bleHandler.connectedTo!.strategy = null;
+                  bleHandler.setStrategy(null);
                   setState(() {});
                 },
                 child: const Text("Desativar")
@@ -103,63 +103,78 @@ class _StrategiesPageState extends State<StrategiesPage> {
     );
   }
 
+
   addDevice() {
-    String name = "";
-    String addr = "";
+    startStrategy start = startStrategy.straight;
+    patrolStrategy patrol = patrolStrategy.straight;
+    attackStrategy attack = attackStrategy.forward;
     showDialog(
         context: context,
-        builder: (context) {
+        builder: (newContext) {
           return AlertDialog(
             title: const Text('Adicionar Robô'),
-            content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    onChanged: (value) {
-                      name = value;
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    onChanged: (value) {
-                      addr = value;
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Endereço MAC',
-                    ),
-                  ),
-                ]
-            ),
+            content: StatefulBuilder(
+            builder: (context, setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DropdownButton<startStrategy>(
+                      value: start,
+                      onChanged: (startStrategy? newValue) {
+                        setState(() {
+                          if (newValue != null) {
+                            start = newValue;
+                          }
+                        });
+                      },
+                      items: startStrategy.values.map((startStrategy val) {
+                        return DropdownMenuItem<startStrategy>(
+                            value: val,
+                            child: Text(val.toString()));
+                      }).toList()),
+                    DropdownButton<patrolStrategy>(
+                        value: patrol,
+                        onChanged: (patrolStrategy? newValue) {
+                          setState(() {
+                            if (newValue != null) {
+                              patrol = newValue;
+                            }
+                          });
+                        },
+                        items: patrolStrategy.values.map((patrolStrategy val) {
+                          return DropdownMenuItem<patrolStrategy>(
+                              value: val,
+                              child: Text(val.toString()));
+                        }).toList()),
+                    DropdownButton<attackStrategy>(
+                        value: attack,
+                        onChanged: (attackStrategy? newValue) {
+                          setState(() {
+                            if (newValue != null) {
+                              attack = newValue;
+                            }
+                          });
+                        },
+                        items: attackStrategy.values.map((attackStrategy val) {
+                          return DropdownMenuItem<attackStrategy>(
+                              value: val,
+                              child: Text(val.toString()));
+                        }).toList())
+                  ]
+              );
+          }),
             actions: <Widget>[
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(newContext);
                   },
                   child: const Text('Fechar')
               ),
               TextButton(
                   onPressed: () {
-                    if (name == "" || addr == "") {
-                      Navigator.pop(context);
-                      _showDialog("Adicionar Robô", "Valor inválido!");
-                    } else {
-                      //final index = strategies.indexWhere((robot) => robot.address == addr);
-                      //if (index < 0) {
-                      //  strategies.add(Robot(name, addr));
-                      //  Navigator.pop(context);
-                      //  setState(() {});
-                      //} else {
-                      //  Navigator.pop(context);
-                      //  _showDialog("Adicionar Robô", "Endereço já adicionado!");
-                     // }
-                    }
+                    strategies.add(Strategy(start, patrol, attack));
+                    Navigator.pop(newContext);
+                    setState(() {});
                   },
                   child: const Text('Adicionar')
               ),
