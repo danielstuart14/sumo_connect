@@ -41,4 +41,12 @@ class Bluetooth {
     connectedTo!.robotPos = robot;
     connectedTo!.enemyPos = enemy;
   }
+
+  setStatus(RobotStatus status) {
+    if (connectedTo == null) {
+      return;
+    }
+
+    connectedTo!.status = status;
+  }
 }

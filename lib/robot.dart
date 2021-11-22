@@ -1,4 +1,11 @@
 import 'package:sumo_connect/strategy.dart';
+
+enum RobotStatus {
+  idle,
+  waiting,
+  executing
+}
+
 class Position {
   final double x;
   final double y;
@@ -11,6 +18,7 @@ class Robot {
   Strategy? strategy;
   Position? robotPos;
   Position? enemyPos;
+  RobotStatus status = RobotStatus.idle;
 
   Robot(this.name, this.address);
 }
